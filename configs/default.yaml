@@ -1,0 +1,7 @@
+provider: local
+
+local:
+  model: deepseek-r1:1.5b
+
+azure:
+  deployment: null
