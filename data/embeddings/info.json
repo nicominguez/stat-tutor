@@ -1,0 +1,6 @@
+{
+  "model": "all-MiniLM-L6-v2",
+  "num_chunks": 74,
+  "dim": 384,
+  "elapsed_sec": 1.73
+}

@@ -1,3 +1,6 @@
 ollama
-python-dotenv
-pyyaml
+pdfplumber
+trafilatura
+tiktoken
+sentence-transformers
+numpy
