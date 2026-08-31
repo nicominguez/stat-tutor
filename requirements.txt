@@ -1,4 +1,5 @@
 ollama
+openai
 pdfplumber
 trafilatura
 tiktoken

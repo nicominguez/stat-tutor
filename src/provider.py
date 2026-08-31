@@ -2,6 +2,9 @@ from __future__ import annotations
 from abc import ABC, abstractmethod
 import os
 import yaml
+from dotenv import load_dotenv
+
+load_dotenv()
 
 
 class LLMProvider(ABC):
@@ -28,17 +31,30 @@ class OllamaProvider(LLMProvider):
 
 
 class AzureProvider(LLMProvider):
-    def __init__(self, deployment: str | None):
-        if not deployment:
+    def __init__(self, endpoint: str | None, api_key: str | None, deployment: str | None):
+        if not (endpoint and api_key and deployment):
             raise RuntimeError(
-                "Azure provider selected but not configured yet. "
-                "Fill in .env and configs/default.yaml, or use provider: local."
+                "Azure provider selected but not fully configured. "
+                "Check AZURE_OPENAI_ENDPOINT / AZURE_OPENAI_API_KEY in .env, "
+                "and azure.deployment in configs/default.yaml."
             )
-        # Real Azure OpenAI client wiring comes when we do that milestone.
+        from openai import OpenAI
+
+        self._client = OpenAI(
+            base_url=endpoint,
+            api_key=api_key,
+        )
         self.deployment = deployment
 
     def complete(self, system: str, user: str, **kw) -> str:
-        raise NotImplementedError("Azure provider not wired up yet.")
+        resp = self._client.chat.completions.create(
+            model=self.deployment,
+            messages=[
+                {"role": "system", "content": system},
+                {"role": "user", "content": user},
+            ],
+        )
+        return resp.choices[0].message.content
 
 
 def load_config(path: str = "configs/default.yaml") -> dict:
@@ -49,8 +65,13 @@ def load_config(path: str = "configs/default.yaml") -> dict:
 def get_provider(cfg: dict | None = None) -> LLMProvider:
     cfg = cfg or load_config()
     name = cfg["provider"]
+
     if name == "local":
         return OllamaProvider(model=cfg["local"]["model"])
     elif name == "azure":
-        return AzureProvider(deployment=cfg["azure"]["deployment"])
+        return AzureProvider(
+            endpoint=os.environ.get("AZURE_OPENAI_ENDPOINT"),
+            api_key=os.environ.get("AZURE_OPENAI_API_KEY"),
+            deployment=cfg["azure"]["deployment"],
+        )
     raise ValueError(f"Unknown provider: {name}")

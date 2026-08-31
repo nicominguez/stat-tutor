@@ -36,7 +36,7 @@ def main():
     print(f"Loading {MODEL_NAME}...")
     model = SentenceTransformer(MODEL_NAME)
 
-    print("Embedding {len(texts)} chunks...")
+    print(f"Embedding {len(texts)} chunks...")
     t0 = time.time()
     vectors = model.encode(texts, show_progress_bar=True, convert_to_numpy=True)
     elapsed = time.time() - t0

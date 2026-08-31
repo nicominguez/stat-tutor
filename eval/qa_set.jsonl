@@ -1,0 +1,3 @@
+{"id": "q01", "question": "[replace: e.g. What is the difference between a Type I and Type II error?]", "gold_answer": "[short, factual gold answer]", "source_file": "[e.g. unit3_hypothesis_testing.md]", "tags": ["conceptual"]}
+{"id": "q02", "question": "[replace: e.g. Compute the standard error for a sample of n=25, s=4]", "gold_answer": "[short, factual gold answer]", "source_file": "[e.g. unit2_estimation.md]", "tags": ["computational"]}
+{"id": "q03", "question": "[replace: a question with no answer anywhere in your course material]", "gold_answer": "[should abstain / not in course material]", "source_file": "", "tags": ["trap"]}
