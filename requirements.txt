@@ -5,3 +5,4 @@ trafilatura
 tiktoken
 sentence-transformers
 numpy
+pandas

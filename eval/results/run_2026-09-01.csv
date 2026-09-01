@@ -1,0 +1,18 @@
+question_id,question,gold_answer,gold_source,tags,retrieved_sources,recall_at_k,mrr,model_answer,relevance,groundedness,correctness,uncertainty_handling,citation
+q01,[replace: e.g. What is the difference between a Type I and Type II error?],"[short, factual gold answer]",[e.g. unit3_hypothesis_testing.md],['conceptual'],"['1_estadistica_param_noparam.md', '1_estadistica_param_noparam.md', '1_estadistica_param_noparam.md', '1_estadistica_param_noparam.md', '1_estadistica_param_noparam.md']",0.0,0.0,"I can’t see your actual question—only a placeholder (“e.g., What is the difference between a Type I and Type II error?”). Please provide the specific question.
+
+If you intended to ask about Type I vs. Type II errors: in the excerpts shown, those definitions are not explicitly given. The material references sensitivity/specificity and mentions a confusion matrix (Figure 7) and power, but the figure and definitions aren’t included here, so I can’t answer that from the provided text. If you share the exact section or your precise question, I’ll answer using the course material.",,,,,
+q02,"[replace: e.g. Compute the standard error for a sample of n=25, s=4]","[short, factual gold answer]",[e.g. unit2_estimation.md],['computational'],"['1_estadistica_param_noparam.md', '1_estadistica_param_noparam.md', '1_estadistica_param_noparam.md', '1_estadistica_param_noparam.md', '1_estadistica_param_noparam.md']",0.0,0.0,"Según el material del curso, al construir IC y estadísticos t se usa el error estándar de la media como s/√n (por ejemplo: 10/√40, 9/√40, 10/√10 en el código).
+
+Con n=25 y s=4:
+EE = 4/√25 = 4/5 = 0.8
+
+(Si se conociera σ poblacional, se usaría σ/√n).",1,2,3,4,5
+q03,[replace: a question with no answer anywhere in your course material],[should abstain / not in course material],,['trap'],"['1_estadistica_param_noparam.md', '1_estadistica_param_noparam.md', '1_estadistica_param_noparam.md', '1_estadistica_param_noparam.md', '1_estadistica_param_noparam.md']",,,"I can’t answer that from the provided course material. The excerpts you shared cover topics like:
+- Confidence intervals for a mean using t (and when z might be used)
+- One-sided hypothesis tests and p-values for the mean
+- Power calculations for comparing two means with known variances
+- Sensitivity, specificity, ROC curves, AUC, and the Youden index
+- Chi-squared tests of association and interpreting contingency tables
+
+If you can restate your question in terms of one of these topics (or point to a specific snippet above), I can help using the material.",6,7,8,9,10

@@ -3,14 +3,17 @@ M5: Run the eval set through retrieval + generation. Retrieval metrics (recall@k
 are computed automatically. Answer-quality rubric fields are left blank for manual scoring.
 
 Usage:
-    python src/eval_harness.py --qa eval/qa_set.jsonl --k 5
+    python src/eval/harness.py --qa eval/qa_set.jsonl --k 5
 """
 import argparse
 import json
+import sys
 from datetime import date
 from pathlib import Path
 
+sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 from generate import answer
+from eval.scorers import ManualScorer #TODO: , LLMJudgeScorer
 
 
 def recall_and_mrr(retrieved_sources: list[str], gold_source: str) -> tuple[int | None, float | None]:
@@ -30,8 +33,7 @@ def load_qa_set(path: str) -> list[dict]:
         return [json.loads(line) for line in f if line.strip()]
 
 
-def run_eval(qa_items: list[dict], k: int) -> list[dict]:
-    """Run every question through retrieve+generate, scoring retrieval automatically."""
+def run_eval(qa_items: list[dict], k: int, scorer: AnswerScorer) -> list[dict]:
     rows = []
     for item in qa_items:
         gold_source = item.get("source_file", "")
@@ -39,7 +41,7 @@ def run_eval(qa_items: list[dict], k: int) -> list[dict]:
         retrieved_sources = [c["source"] for c in chunks]
         recall, mrr = recall_and_mrr(retrieved_sources, gold_source)
 
-        rows.append({
+        row = {
             "question_id": item["id"],
             "question": item["question"],
             "gold_answer": item.get("gold_answer", ""),
@@ -49,13 +51,9 @@ def run_eval(qa_items: list[dict], k: int) -> list[dict]:
             "recall_at_k": recall,
             "mrr": round(mrr, 3) if mrr is not None else None,
             "model_answer": response,
-            # left blank on purpose — scored by hand, see score_results.py
-            "relevance": None,
-            "groundedness": None,
-            "correctness": None,
-            "uncertainty_handling": None,
-            "citation": None,
-        })
+        }
+        row.update(scorer.score(row))
+        rows.append(row)
         print(f"[{item['id']}] recall@{k}={recall}  mrr={mrr}")
     return rows
 
@@ -85,7 +83,8 @@ def main():
     out_path = Path(args.out or f"eval/results/run_{date.today().isoformat()}.jsonl")
 
     qa_items = load_qa_set(args.qa)
-    rows = run_eval(qa_items, k=args.k)
+    scorer = ManualScorer()   # swap for LLMJudgeScorer(get_provider()) later — see scorers.py TODO
+    rows = run_eval(qa_items, k=args.k, scorer=scorer)
     write_results(rows, out_path)
 
     print_retrieval_summary(rows, k=args.k)
